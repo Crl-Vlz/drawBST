@@ -12,7 +12,7 @@ color["line"] = "#ADF67C"
 color["activeC"] = "#9F8BF5"
 color["activeL"] = "#F5A0C1"
 
-def inicializar:
+def inicializar():
     #i = input()
     #f = open(i + ".in")
     #lines = f.readlines()
