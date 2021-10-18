@@ -3,6 +3,8 @@ from collections import namedtuple
 from collections import deque
 from pygame.locals import QUIT
 from time import sleep
+from dataclasses import dataclass
+from math import inf
 
 color=dict()
 color["circle"] = "#A0F5F6"
@@ -10,8 +12,11 @@ color["line"] = "#ADF67C"
 color["activeC"] = "#9F8BF5"
 color["activeL"] = "#F5A0C1"
 
-from dataclasses import dataclass
-from math import inf
+def inicializar:
+    #i = input()
+    #f = open(i + ".in")
+    #lines = f.readlines()
+    inputArray = [44, 17, 88, 8, 32, 65, 97, 28, 57, 82, 93, 21, 29, 76, 80] 
 
 @dataclass #para no poner constructor --- es ponerle una etiqueta
 class Nodo:
