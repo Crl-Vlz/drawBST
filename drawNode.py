@@ -1,7 +1,7 @@
 import pygame, sys
 
 class drawNode:
-    def __init__(self, value, surface, color, center, radius):
+    def __init__(self, value, color, center, radius):
         value = str(value)
         self.value = value
         screen = pygame.Surface
