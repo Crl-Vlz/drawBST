@@ -1,5 +1,7 @@
 import pygame
 
+# Returns a pygame Surface that can then be drawn to show an individual node
+# this does not include the arysts
 class drawNode:
     def __init__(self, value, color, radius):
         value = str(value)
