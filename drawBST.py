@@ -13,10 +13,12 @@ color["activeC"] = "#9F8BF5"
 color["activeL"] = "#F5A0C1"
 
 def inicializar():
-    #i = input()
-    #f = open(i + ".in")
-    #lines = f.readlines()
-    inputArray = [44, 17, 88, 8, 32, 65, 97, 28, 57, 82, 93, 21, 29, 76, 80] 
+    i = input()
+    f = open(i + ".in")
+    line = f.readline().split(" ")
+    for number in line:
+        print(number)
+    
 
 @dataclass #para no poner constructor --- es ponerle una etiqueta
 class Nodo:
@@ -132,22 +134,23 @@ class bst:
 
 
 def main():
-	pygame.init()
+    pygame.init()
+    inicializar()
 
-	screenSize = 400
-	pantalla = pygame.display.set_mode((screenSize, screenSize))
-	pantalla.fill((255,255,255))
+    screenSize = 400
+    pantalla = pygame.display.set_mode((screenSize, screenSize))
+    pantalla.fill((255,255,255))
 
-	#w = screenSize/i
-	#h = screenSize/j
-	
+    #w = screenSize/i
+    #h = screenSize/j
 
-	while True:
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				pygame.quit()
-			pygame.display.update()
-			sleep(.1)		
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+            pygame.display.update()
+            sleep(.1)		
 	
 
 
