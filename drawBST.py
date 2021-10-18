@@ -122,9 +122,9 @@ class bst:
         if not Nodo: return []
         return self.inorden(Nodo.izquierdo) + [Nodo.valor] + self.inorden(Nodo.derecho)
 
-    def postorden(self, Nodo):
-        if not Nodo: return []
-       return self.postorden(Nodo.izquierdo) + self.postorden(Nodo.derecho) + [Nodo.valor]
+	def postorden(self, Nodo):
+		if not Nodo:return []
+		return self.postorden(Nodo.izquierdo) + self.postorden(Nodo.derecho) + [Nodo.valor]
 
 
 def main():
