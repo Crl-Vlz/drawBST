@@ -14,13 +14,12 @@ from dataclasses import dataclass
 from math import inf
 
 @dataclass #para no poner constructor --- es ponerle una etiqueta
-class nodo:
+class Nodo:
     llave: int
     valor: str = ""
     padre: str = None
     izquierdo: str = None
     derecho: str = None
-
 
 
 @dataclass
@@ -32,7 +31,7 @@ class bst:
     def insertar(self, llave, valor=""):
         actual = self.raiz
         while True:
-            #Insertando los nodos            CONDICIONES DE PARO
+            #Insertando los Nodos            CONDICIONES DE PARO
             if llave < actual.llave and not actual.izquierdo:
                 actual.izquierdo=Nodo(llave, valor)
                 actual.izquierdo.padre = actual
@@ -62,70 +61,70 @@ class bst:
                         return None
                 actual = actual.derecho
 
-    def anterior(self, nodo):
-        if nodo.izquierdo:
-            return self.maximo(nodo.izquierdo)
+    def anterior(self, Nodo):
+        if Nodo.izquierdo:
+            return self.maximo(Nodo.izquierdo)
         else:
-            padre = nodo.padre
+            padre = Nodo.padre
             if not padre : return None
-            while padre.izquierdo == nodo:
-                nodo = nodo.padre
+            while padre.izquierdo == Nodo:
+                Nodo = Nodo.padre
                 padre = padre.padre
                 if not padre : return None
             return padre
     
-    def maximo(self, nodo):
-        while nodo.derecho:
-            nodo = nodo.derecho
-        return nodo
+    def maximo(self, Nodo):
+        while Nodo.derecho:
+            Nodo = Nodo.derecho
+        return Nodo
 
-    def minimo(self, nodo):
-        while nodo.izquierdo:
-            nodo = nodo.izquierdo
-        return nodo
+    def minimo(self, Nodo):
+        while Nodo.izquierdo:
+            Nodo = Nodo.izquierdo
+        return Nodo
 
-    def intercambiar(self, nodo1, nodo2):
-        nodo1.llave, nodo2.llave = nodo2.llave, nodo1.llave
-        nodo1.valor, nodo2.valor = nodo2.valor, nodo1.valor
+    def intercambiar(self, Nodo1, Nodo2):
+        Nodo1.llave, Nodo2.llave = Nodo2.llave, Nodo1.llave
+        Nodo1.valor, Nodo2.valor = Nodo2.valor, Nodo1.valor
     
-    def eliminar(self, nodo):
-        if type(nodo) == int:
-            nodo = self.buscar(nodo)
-        #Caso 1: nodo sin hijos
-        if not nodo.izquierdo and not nodo.derecho:
-            padre = nodo.padre
-            if padre.izquierdo==nodo:
+    def eliminar(self, Nodo):
+        if type(Nodo) == int:
+            Nodo = self.buscar(Nodo)
+        #Caso 1: Nodo sin hijos
+        if not Nodo.izquierdo and not Nodo.derecho:
+            padre = Nodo.padre
+            if padre.izquierdo==Nodo:
                 padre.izquierdo = None
             else:
                 padre.derecho = None
-        #Caso 2: nodo con 1 hijo
-        elif not nodo.izquierdo or not nodo.derecho:
-            if nodo.izquierdo:
-                hijo = nodo.izquierdo
+        #Caso 2: Nodo con 1 hijo
+        elif not Nodo.izquierdo or not Nodo.derecho:
+            if Nodo.izquierdo:
+                hijo = Nodo.izquierdo
             else:
-                hijo = nodo.derecho
-            padre = nodo.padre
-            if padre.izquierdo == nodo:
+                hijo = Nodo.derecho
+            padre = Nodo.padre
+            if padre.izquierdo == Nodo:
                 padre.izquierdo = hijo
             else:
                 padre.derecho = hijo
-        #Caso 3: nodo con hijos
+        #Caso 3: Nodo con hijos
         else:
-            anterior = self.anterior(nodo)
-            self.intercambiar(anterior, nodo)
+            anterior = self.anterior(Nodo)
+            self.intercambiar(anterior, Nodo)
             self.eliminar(anterior)
 
-    def preorden(self, nodo):
-        if not nodo: return []
-        return [nodo.valor] + self.preorden(nodo.izquierdo) + self.preorden(nodo.derecho)
+    def preorden(self, Nodo):
+        if not Nodo: return []
+        return [Nodo.valor] + self.preorden(Nodo.izquierdo) + self.preorden(Nodo.derecho)
 
-    def inorden(self, nodo):
-        if not nodo: return []
-        return self.inorden(nodo.izquierdo) + [nodo.valor] + self.inorden(nodo.derecho)
+    def inorden(self, Nodo):
+        if not Nodo: return []
+        return self.inorden(Nodo.izquierdo) + [Nodo.valor] + self.inorden(Nodo.derecho)
 
-    def postorden(self, nodo):
-        if not nodo: return []
-       return self.postorden(nodo.izquierdo) + self.postorden(nodo.derecho) + [nodo.valor]
+    def postorden(self, Nodo):
+        if not Nodo: return []
+       return self.postorden(Nodo.izquierdo) + self.postorden(Nodo.derecho) + [Nodo.valor]
 
 
 def main():
