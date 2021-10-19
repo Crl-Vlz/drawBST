@@ -5,6 +5,7 @@ from pygame.locals import QUIT
 from time import sleep
 from dataclasses import dataclass
 from math import inf
+from drawNode import drawNode
 
 color=dict()
 color["circle"] = "#A0F5F6"
