@@ -28,7 +28,6 @@ class Nodo:
     derecho: str = None
 
 
-@dataclass
 class bst:
     def __init__(self): #Infinito para que cualquier valor se vaya a la izq al ser menor a inf
         self.raiz = Nodo(inf, None)
