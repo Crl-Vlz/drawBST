@@ -15,9 +15,9 @@ color["activeL"] = "#F5A0C1"
 def inicializar():
     i = input()
     f = open(i + ".in")
+
     line = f.readline().split()
-    for number in line:
-        print(number)
+    return line
     
 
 @dataclass #para no poner constructor --- es ponerle una etiqueta
@@ -67,6 +67,7 @@ class bst:
                         return None
                 actual = actual.derecho
 
+
     def anterior(self, Nodo):
         if Nodo.izquierdo:
             return self.maximo(Nodo.izquierdo)
@@ -79,20 +80,24 @@ class bst:
                 if not padre : return None
             return padre
     
+
     def maximo(self, Nodo):
         while Nodo.derecho:
             Nodo = Nodo.derecho
         return Nodo
+
 
     def minimo(self, Nodo):
         while Nodo.izquierdo:
             Nodo = Nodo.izquierdo
         return Nodo
 
+
     def intercambiar(self, Nodo1, Nodo2):
         Nodo1.llave, Nodo2.llave = Nodo2.llave, Nodo1.llave
         Nodo1.valor, Nodo2.valor = Nodo2.valor, Nodo1.valor
     
+
     def eliminar(self, Nodo):
         if type(Nodo) == int:
             Nodo = self.buscar(Nodo)
@@ -120,13 +125,16 @@ class bst:
             self.intercambiar(anterior, Nodo)
             self.eliminar(anterior)
 
+
     def preorden(self, Nodo):
         if not Nodo: return []
         return [Nodo.valor] + self.preorden(Nodo.izquierdo) + self.preorden(Nodo.derecho)
 
+
     def inorden(self, Nodo):
         if not Nodo: return []
         return self.inorden(Nodo.izquierdo) + [Nodo.valor] + self.inorden(Nodo.derecho)
+
 
     def postorden(self, Nodo):
         if not Nodo:return []
@@ -135,7 +143,12 @@ class bst:
 
 def main():
     pygame.init()
-    inicializar()
+    nodos = inicializar()
+    arb = bst()
+    for nodo in nodos:
+        arb.insertar(int(nodo), int(nodo))
+    preO = preorden(arb.raiz.hijo)
+    print(arb)
 
     screenSize = 400
     pantalla = pygame.display.set_mode((screenSize, screenSize))
@@ -144,14 +157,12 @@ def main():
     #w = screenSize/i
     #h = screenSize/j
 
-
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
             pygame.display.update()
             sleep(.1)		
-	
 
 
 main()
