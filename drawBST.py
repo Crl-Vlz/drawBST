@@ -147,7 +147,7 @@ def main():
     arb = bst()
     for nodo in nodos:
         arb.insertar(int(nodo), int(nodo))
-    pr
+    preO = preorden(arb.raiz.hijo)
     print(arb)
 
     screenSize = 400
