@@ -167,7 +167,7 @@ def grid(width, height, w, h, pantalla):
     m = 1
     for row in range(height):
         for column in range(width):
-            color = "#A0F5F6"
+            color = "#FFFFFF"
             pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
             print(column)
 
