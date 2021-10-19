@@ -169,11 +169,11 @@ def main():
     arb = bst()
     for nodo in nodos:
         arb.insertar(int(nodo), int(nodo))
-    preO = preorden(arb.raiz.hijo)
+    preO = arb.preorden(arb.raiz.izquierdo)
     print(arb)
 
     screenSize = 400
-    pantalla = pygame.display.set_mode((screenSize, screenSize))
+    pantalla = pygame.display.set_mode((screenSize*2, screenSize))
     pantalla.fill((255,255,255))
 
     #w = screenSize/i
