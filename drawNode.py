@@ -9,10 +9,11 @@ class drawNode:
         value = str(value)
         self.value = value
         screen = pygame.Surface((radius*2, radius*2))
-        pygame.draw.circle(screen, color, (radius/2, radius/2), radius)
+        screen.fill((255, 255, 255, 0))
+        pygame.draw.circle(screen, color, (radius, radius), radius)
         pygame.font.init()
         font = pygame.font.SysFont(None, 12)
         textImg = font.render(value, False, (000, 000, 000))
-        pygame.Surface.blit(screen, textImg, (radius/2, radius/2))
+        pygame.Surface.blit(screen, textImg, (radius, radius))
         pygame.font.quit()
         return screen
