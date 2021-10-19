@@ -163,6 +163,13 @@ class bst:
         if not Nodo:return []
         return self.postorden(Nodo.izquierdo) + self.postorden(Nodo.derecho) + [Nodo.valor]
 
+def grid(width, height, w, h, pantalla):
+    m = 1
+    for row in range(height):
+        for column in range(width):
+            color = "#A0F5F6"
+            pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
+            print(column)
 
 def main():
     pygame.init()
@@ -170,15 +177,20 @@ def main():
     arb = bst()
     for nodo in nodos:
         arb.insertar(int(nodo), int(nodo))
-    preO = arb.preorden(arb.raiz.izquierdo)
-    print(arb)
+    inOrd = arb.inorden(arb.raiz.izquierdo)
+    altura = arb.altura()
+    width = 2**altura + 1
+    print(width)
+    height = altura+1
 
-    screenSize = 400
+    screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
     pantalla.fill((255,255,255))
 
-    #w = screenSize/i
-    #h = screenSize/j
+    w = screenSize*2/width
+    h = screenSize/height
+
+    grid(width, height, w, h, pantalla)
 
     while True:
         for event in pygame.event.get():
