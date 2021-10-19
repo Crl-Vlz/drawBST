@@ -156,7 +156,7 @@ class bst:
 
     def inorden(self, Nodo):
         if not Nodo: return []
-        return self.inorden(Nodo.izquierdo) + [Nodo.valor] + self.inorden(Nodo.derecho)
+        return self.inorden(Nodo.izquierdo) + [Nodo] + self.inorden(Nodo.derecho)
 
 
     def postorden(self, Nodo):
@@ -191,6 +191,12 @@ def main():
     h = screenSize/height
 
     grid(width, height, w, h, pantalla)
+
+    artist = drawNode()
+
+    for i in range(len(inOrd)):
+        x,y = (i, arb.profundidad(inOrd[i]))
+        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], width), (w*x, h*y))
 
     while True:
         for event in pygame.event.get():
