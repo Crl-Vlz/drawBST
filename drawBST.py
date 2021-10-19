@@ -15,7 +15,8 @@ color["activeL"] = "#F5A0C1"
 def inicializar():
     i = input()
     f = open(i + ".in")
-    line = f.readline().split(" ")
+
+    line = f.readline().split()
     return line
     
 
