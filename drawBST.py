@@ -179,7 +179,6 @@ def main():
     inOrd = arb.inorden(arb.raiz.izquierdo)
     altura = arb.altura()
     width = 2**altura + 1
-    print(width)
     height = altura+1
 
     screenSize = 500
