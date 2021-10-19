@@ -51,6 +51,28 @@ class bst:
             else:
                 actual = actual.derecho
 
+    def profundidad(self, nodo):
+        conteo = 0
+        while nodo!= self.raiz:
+            conteo+=1
+            nodo = nodo.padre
+        return conteo -1
+
+    def altura(self, nodo=None):
+        cont1 = 0
+        cont2 = 0
+        cont = 0
+        if nodo == None:
+            nodo = self.raiz.izquierdo
+        cont+=1
+        if nodo.izquierdo != None :
+            cont1 = cont + self.altura(nodo.izquierdo)    
+        if nodo.derecho != None :
+            cont2 = cont + self.altura(nodo.derecho)
+        if cont1 > cont2 :
+            return cont1
+        else:
+            return cont2
 
     def buscar(self, llave):
         actual = self.raiz
