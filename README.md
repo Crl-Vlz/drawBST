@@ -1,6 +1,6 @@
 # drawBST
 
-## By Carlos Vélez and Lucy Castañeda
+## By Carlos Vélez, Lucy Castañeda and Ximena Muñoz
 
 ---
 
