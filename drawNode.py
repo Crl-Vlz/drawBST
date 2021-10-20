@@ -7,7 +7,7 @@ class drawNode:
     def draw(self, value, color, center, radius):
         value = str(value)
         self.value = value
-        screen = pygame.Surface
+        screen = pygame.Surface((0,0))
         pygame.draw.circle(screen, color, center, radius)
         pygame.font.init()
         textImg = pygame.render(value, False, (000, 000, 000))
