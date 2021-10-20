@@ -207,7 +207,6 @@ def main():
 
         pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
 
-
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
