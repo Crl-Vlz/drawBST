@@ -195,7 +195,7 @@ def main():
 
     for i in range(len(inOrd)):
         x,y = (i, arb.profundidad(inOrd[i]))
-        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], width), (w*x, h*y))
+        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2), (w*x, h*y))
 
     while True:
         for event in pygame.event.get():
