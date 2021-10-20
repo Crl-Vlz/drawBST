@@ -175,6 +175,8 @@ def main():
     pygame.init()
     nodos = inicializar()
     arb = bst()
+    coords = dict()
+
     for nodo in nodos:
         arb.insertar(int(nodo), int(nodo))
     inOrd = arb.inorden(arb.raiz.izquierdo)
@@ -195,7 +197,15 @@ def main():
 
     for i in range(len(inOrd)):
         x,y = (i, arb.profundidad(inOrd[i]))
-        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2), (w*x, h*y))
+        coords[inOrd[i].valor] = x, y
+
+    for i in range(len(inOrd)):
+        x, y = coords[inOrd[i].valor]
+        if inOrd[i].padre.valor is not None:
+            xp, yp = coords[inOrd[i].padre.valor]
+            pygame.draw.line(pantalla, color["line"], (w*x, h*y), (w*xp, h*yp), 2)
+
+        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], width*0.8), (w*x, h*y))
 
     while True:
         for event in pygame.event.get():
