@@ -9,8 +9,8 @@ from drawNode import drawNode
 
 color=dict()
 color["circle"] = "#A0F5F6"
-color["line"] = "#ADF67C"
-color["activeC"] = "#9F8BF5"
+color["line"] = "#9F8BF5"
+color["activeC"] = "#ADF67C"
 color["activeL"] = "#F5A0C1"
 
 def inicializar():
