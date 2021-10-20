@@ -163,6 +163,35 @@ class bst:
         if not Nodo:return []
         return self.postorden(Nodo.izquierdo) + self.postorden(Nodo.derecho) + [Nodo.valor]
 
+    def religar(self, padre, hijo, es_izquierdo) :
+        if es_izquierdo:
+            padre.izquierdo = hijo
+        else :
+            padre.derecho = hijo
+        if hijo is not None :
+            hijo.padre = padre
+
+    def rotar(self, x) :
+        y = x.padre #padre de x
+        z = y.padre #abuelo de x
+        self.religar(z,x,y==z.izquierdo)
+        if x==y.izquierdo :
+            self.religar(y,x.derecho,True)
+            self.religar(x,y,False)
+        if x==y.derecho :
+            self.religar(y,x.izquierdo,False)
+            self.religar(x,y,True)
+    
+    def doble_rotar(self,x) :
+        y = x.padre
+        z = y.padre
+        if (x==y.derecho) == (y==z.derecho) :
+            self.rotar(y)
+        else :
+            self.rotar(x)
+            self.rotar(x)
+
+
 def grid(width, height, w, h, pantalla):
     m = 1
     for row in range(height):
@@ -170,6 +199,7 @@ def grid(width, height, w, h, pantalla):
             color = "#FFFFFF"
             pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
             print(column)
+
 
 def main():
     pygame.init()
