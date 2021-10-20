@@ -203,9 +203,9 @@ def main():
         x, y = coords[inOrd[i].valor]
         if inOrd[i].padre.valor is not None:
             xp, yp = coords[inOrd[i].padre.valor]
-            pygame.draw.line(pantalla, color["line"], (w*x, h*y), (w*xp, h*yp), 2)
+            pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
 
-        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], width*0.8), (w*x, h*y))
+        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
 
 
     while True:

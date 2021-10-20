@@ -5,14 +5,14 @@ import pygame
 class drawNode:
     def __init__(self):
         pass
-    def draw(self, value, color, radius):
+    def draw(self, value, color, radius, f):
         value = str(value)
         self.value = value
         screen = pygame.Surface((radius*2, radius*2))
         screen.fill((255, 255, 255, 0))
         pygame.draw.circle(screen, color, (radius, radius), radius)
         pygame.font.init()
-        font = pygame.font.SysFont(None, 12)
+        font = pygame.font.SysFont(None, f)
         textImg = font.render(value, False, (000, 000, 000))
         pygame.Surface.blit(screen, textImg, (radius, radius))
         pygame.font.quit()
