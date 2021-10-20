@@ -8,5 +8,5 @@ A program that draws a binary search tree using pygame.
 It allows the following actions:
  - Insert Node
  - Delete Node
- - Search
+ - Search for Node
  - Rotate Node (Balance Tree)
