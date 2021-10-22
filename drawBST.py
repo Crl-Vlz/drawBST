@@ -6,6 +6,7 @@ from time import sleep
 from dataclasses import dataclass
 from math import inf
 from drawNode import drawNode
+from pygame import Color, Surface
 
 color=dict()
 color["circle"] = "#A0F5F6"
@@ -215,47 +216,52 @@ def main():
     instrucciones = inicializar()
     arb = bst()
     coords = dict()
-    for i in instrucciones:
-        if i[0] == "INSERTAR":
-            arb.insertar(int(i[1]), int(i[1]))
-            inOrd = arb.inorden(arb.raiz.izquierdo)
-        if i[0] == "BUSCAR":
-            pass
-        if i[0] == "ELIMINAR":
-            pass
-        if i[0] == "ROTAR":
-            pass
-
-
-
-    altura = arb.altura()
-    width = 2**altura + 1
-    height = altura+1
-
     screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
-    pantalla.fill((255,255,255))
 
-    w = screenSize*2/width
-    h = screenSize/height
+    for i in instrucciones:
+        pantalla.fill((0,0,0))
+        nodo = int(i[1])
+        print(nodo)
+        if i[0] == "INSERTAR":
+            arb.insertar(nodo, nodo)
+            inOrd = arb.inorden(arb.raiz.izquierdo)
+        if i[0] == "BUSCAR":
+            encontrado = arb.buscar(nodo)
+        if i[0] == "ELIMINAR":
+            arb.eliminar(nodo)
+        if i[0] == "ROTAR":
+            arb.doble_rotar(nodo)
 
-    grid(width, height, w, h, pantalla)
+        altura = arb.altura()
+        width = 2**altura + 1
+        height = altura+1
 
-    artist = drawNode()
+        pantalla.fill((255,255,255))
 
-    for i in range(len(inOrd)):
-        x,y = (i, arb.profundidad(inOrd[i]))
-        coords[inOrd[i].valor] = x, y
+        w = screenSize*2/width
+        h = screenSize/height
 
-    for i in range(len(inOrd)):
-        x, y = coords[inOrd[i].valor]
-        if inOrd[i].padre.valor is not None:
-            xp, yp = coords[inOrd[i].padre.valor]
-            pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-    
-    for i in range(len(inOrd)):
-        x, y = coords[inOrd[i].valor]
-        pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
+        grid(width, height, w, h, pantalla)
+
+        artist = drawNode()
+
+        for i in range(len(inOrd)):
+            x,y = (i, arb.profundidad(inOrd[i]))
+            coords[inOrd[i].valor] = x, y
+
+        for i in range(len(inOrd)):
+            x, y = coords[inOrd[i].valor]
+            if inOrd[i].padre.valor is not None:
+                xp, yp = coords[inOrd[i].padre.valor]
+                pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+        
+        for i in range(len(inOrd)):
+            x, y = coords[inOrd[i].valor]
+            pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))    
+
+        pygame.display.update()
+        sleep(.1)	
 
     while True:
         for event in pygame.event.get():
