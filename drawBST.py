@@ -35,6 +35,7 @@ class Nodo:
     padre: str = None
     izquierdo: str = None
     derecho: str = None
+    visual: pygame.Surface = None
 
 
 class bst:
@@ -85,18 +86,21 @@ class bst:
 
     def buscar(self, llave):
         actual = self.raiz
+        navList = [actual]
         while True:
+            sleep(0.1)
             if llave == actual.llave:
-                return actual
+                return actual, navList
             if llave < actual.llave:
                 if not actual.izquierdo:
-                        return None
+                        return None, []
                 actual = actual.izquierdo
+                navList.append(actual)
             else:
                 if not actual.derecho:
-                        return None
+                        return None, []
                 actual = actual.derecho
-
+                navList.append(actual)
 
     def anterior(self, Nodo):
         if Nodo.izquierdo:
@@ -130,7 +134,7 @@ class bst:
 
     def eliminar(self, Nodo):
         if type(Nodo) == int:
-            Nodo = self.buscar(Nodo)
+            Nodo, uselessList = self.buscar(Nodo)
         #Caso 1: Nodo sin hijos
         if not Nodo.izquierdo and not Nodo.derecho:
             padre = Nodo.padre
@@ -219,22 +223,23 @@ def main():
     screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
 
+    searchNodes = []
+
     for i in instrucciones:
         pantalla.fill((0,0,0))
         nodo = int(i[1])
         print(nodo)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
+            inOrd = arb.inorden(arb.raiz.izquierdo)
         if i[0] == "BUSCAR":
-            encontrado = arb.buscar(nodo)
-            #ANIMACIÓN DE BUSCAR
+            encontrado, lista = arb.buscar(nodo)
+            searchNodes.append(lista)
         if i[0] == "ELIMINAR":
             arb.eliminar(nodo)
         if i[0] == "ROTAR":
-            encontrado = arb.buscar(nodo)
-            arb.doble_rotar(encontrado)
-            #ANIMACION ROTAR
-        inOrd = arb.inorden(arb.raiz.izquierdo)
+            pass
+            #arb.doble_rotar(nodo)
 
         altura = arb.altura()
         width = 2**altura + 1
@@ -262,17 +267,24 @@ def main():
                 if inOrd[i].padre.valor is not None:
                     xp, yp = coords[inOrd[i].padre.valor]
                     pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-
+    
         for i in range(len(inOrd)):
             x, y = coords[inOrd[i].valor]
             if inOrd[i].valor == nodo:
-                pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["activeC"], w/2, round(w/2)), (w*x, h*y))
+                inOrd[i].visual = artist.draw(inOrd[i].valor, color["activeC"], w/2, round(w/2))
+                pygame.Surface.blit(pantalla, inOrd[i].visual, (w*x, h*y))
             else :
-                pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
-  
+                inOrd[i].visual = artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2))
+                pygame.Surface.blit(pantalla, inOrd[i].visual, (w*x, h*y))
+            sleep(0.1)
+
+        for lists in searchNodes:
+            for node in lists:
+                node.visual.fill(color["activeC"])
+                sleep(0.1)
 
         pygame.display.update()
-        sleep(.5)	
+        sleep(.1)	
 
     while True:
         for event in pygame.event.get():
