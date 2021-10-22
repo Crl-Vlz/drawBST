@@ -252,13 +252,21 @@ def main():
 
         for i in range(len(inOrd)):
             x, y = coords[inOrd[i].valor]
-            if inOrd[i].padre.valor is not None:
+            if inOrd[i].valor == nodo and inOrd[i].padre.valor is not None :
                 xp, yp = coords[inOrd[i].padre.valor]
-                pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-        
+                pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            else :  
+                if inOrd[i].padre.valor is not None:
+                    xp, yp = coords[inOrd[i].padre.valor]
+                    pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+    
         for i in range(len(inOrd)):
             x, y = coords[inOrd[i].valor]
-            pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))    
+            if inOrd[i].valor == nodo:
+                pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["activeC"], w/2, round(w/2)), (w*x, h*y))
+            else :
+                pygame.Surface.blit(pantalla, artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
+  
 
         pygame.display.update()
         sleep(.1)	
