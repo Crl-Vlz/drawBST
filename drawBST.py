@@ -28,14 +28,19 @@ def inicializar():
     return instrucciones
     
 
+@dataclass
+class Nodo:
+    pass
+
 @dataclass #para no poner constructor --- es ponerle una etiqueta
 class Nodo:
     llave: int
     valor: str = ""
-    padre: str = None
-    izquierdo: str = None
-    derecho: str = None
+    padre: Nodo = None
+    izquierdo: Nodo = None
+    derecho: Nodo = None
     visual: pygame.Surface = None
+    line: pygame.Rect = None
 
 
 class bst:
@@ -86,7 +91,7 @@ class bst:
 
     def buscar(self, llave):
         actual = self.raiz
-        navList = [actual]
+        navList = []
         while True:
             sleep(0.1)
             if llave == actual.llave:
@@ -210,10 +215,6 @@ def grid(width, height, w, h, pantalla):
             color = "#FFFFFF"
             pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
 
-def cambiarColor (Nodo, x, y, xp, yp, pantalla, w, h, artist) :
-    pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-    pygame.Surface.blit(pantalla, artist.draw(Nodo.valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
-
 
 def main():
     pygame.init()
@@ -222,21 +223,102 @@ def main():
     coords = dict()
     screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
-
+    artist = drawNode()
     searchNodes = []
 
+    w = 0
+    h = 0
+
+    pantalla.fill((255,255,255))
+
+
+    pygame.display.update()
+
     for i in instrucciones:
-        pantalla.fill((0,0,0))
+        pantalla.fill((255,255,255))
         nodo = int(i[1])
         print(nodo)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
             inOrd = arb.inorden(arb.raiz.izquierdo)
+            for iter in range(len(inOrd)):
+                x,y = (iter, arb.profundidad(inOrd[iter]))
+                coords[inOrd[iter].valor] = x, y
+            altura = arb.altura()
+            width = 2**altura + 1
+            height = altura+1
+            w = screenSize*2/width
+            h = screenSize/height
+            pantalla.fill((255, 255, 255))
+            for node in inOrd:
+                if node.visual:
+                    x, y = coords[node.valor]
+                    node.visual = pygame.transform.scale(node.visual, (w, w))
+                    if node.line:
+                        xp, yp = coords[node.padre.valor]
+                        node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+                        #pygame.Surface.blit(pantalla, node.line, (w*x, h*y))
+                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                else:
+                    node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
+                    x, y = coords[node.valor]
+                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                    if node.padre and node.padre.valor:
+                        xp, yp = coords[node.padre.valor]
+                        node.line = pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+                sleep(0.1)
+                node.visual.fill((255, 255, 255))
+                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
+                if node.line:
+                    node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+                pygame.display.update()
+
         if i[0] == "BUSCAR":
             encontrado, lista = arb.buscar(nodo)
-            searchNodes.append(lista)
+            inOrd = arb.inorden(arb.raiz.izquierdo)
+            for node in inOrd:
+                node.visual = pygame.transform.scale(node.visual, (w, w))
+                x, y = coords[node.valor]
+                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                node.visual.fill((255, 255, 255))
+                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
+            for node in lista:
+                x, y = coords[node.valor]
+                node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
+                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                pygame.display.update()
+                sleep(1)
+            for node in lista:
+                node.visual.fill((255, 255, 255))
+                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
+                x, y = coords[node.valor]
+                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+            pygame.display.update()
         if i[0] == "ELIMINAR":
             arb.eliminar(nodo)
+            inOrd = arb.inorden(arb.raiz.izquierdo)
+            for iter in range(len(inOrd)):
+                x,y = (iter, arb.profundidad(inOrd[iter]))
+                coords[inOrd[iter].valor] = x, y
+            altura = arb.altura()
+            width = 2**altura + 1
+            height = altura+1
+            w = screenSize*2/width
+            h = screenSize/height
+            for node in inOrd:
+                if node.visual:
+                    #Add this
+                    node.visual = pygame.transform.scale(node.visual, (w, w))
+                    x, y = coords[node.valor]
+                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                    #pantalla.blit(node.visual, (w*x, h*y))
+                else:
+                    node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
+                    x, y = coords[node.valor]
+                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+                    #pantalla.blit(node.visual, (w*x, h*y))
+                sleep(0.1)
+                node.visual.fill(color["circle"])
         if i[0] == "ROTAR":
             pass
             #arb.doble_rotar(nodo)
@@ -244,47 +326,21 @@ def main():
         altura = arb.altura()
         width = 2**altura + 1
         height = altura+1
-
-        pantalla.fill((255,255,255))
-
         w = screenSize*2/width
         h = screenSize/height
 
-        grid(width, height, w, h, pantalla)
-
-        artist = drawNode()
-
-        for i in range(len(inOrd)):
-            x,y = (i, arb.profundidad(inOrd[i]))
-            coords[inOrd[i].valor] = x, y
-
-        for i in range(len(inOrd)):
-            x, y = coords[inOrd[i].valor]
-            if inOrd[i].valor == nodo and inOrd[i].padre.valor is not None :
-                xp, yp = coords[inOrd[i].padre.valor]
-                pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-            else :  
-                if inOrd[i].padre.valor is not None:
-                    xp, yp = coords[inOrd[i].padre.valor]
-                    pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-    
-        for i in range(len(inOrd)):
-            x, y = coords[inOrd[i].valor]
-            if inOrd[i].valor == nodo:
-                inOrd[i].visual = artist.draw(inOrd[i].valor, color["activeC"], w/2, round(w/2))
-                pygame.Surface.blit(pantalla, inOrd[i].visual, (w*x, h*y))
-            else :
-                inOrd[i].visual = artist.draw(inOrd[i].valor, color["circle"], w/2, round(w/2))
-                pygame.Surface.blit(pantalla, inOrd[i].visual, (w*x, h*y))
-            sleep(0.1)
-
-        for lists in searchNodes:
-            for node in lists:
-                node.visual.fill(color["activeC"])
-                sleep(0.1)
+        #for i in range(len(inOrd)):
+        #    x, y = coords[inOrd[i].valor]
+        #    if inOrd[i].valor == nodo and inOrd[i].padre.valor is not None :
+        #        xp, yp = coords[inOrd[i].padre.valor]
+        #        pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+        #    else :  
+        #        if inOrd[i].padre.valor is not None:
+        #            xp, yp = coords[inOrd[i].padre.valor]
+        #            pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
 
         pygame.display.update()
-        sleep(.1)	
+        #sleep(.1)	
 
     while True:
         for event in pygame.event.get():
