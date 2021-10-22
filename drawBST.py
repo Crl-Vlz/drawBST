@@ -225,13 +225,16 @@ def main():
         print(nodo)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
-            inOrd = arb.inorden(arb.raiz.izquierdo)
         if i[0] == "BUSCAR":
             encontrado = arb.buscar(nodo)
+            #ANIMACIÓN DE BUSCAR
         if i[0] == "ELIMINAR":
             arb.eliminar(nodo)
         if i[0] == "ROTAR":
-            arb.doble_rotar(nodo)
+            encontrado = arb.buscar(nodo)
+            arb.doble_rotar(encontrado)
+            #ANIMACION ROTAR
+        inOrd = arb.inorden(arb.raiz.izquierdo)
 
         altura = arb.altura()
         width = 2**altura + 1
@@ -259,7 +262,6 @@ def main():
                 if inOrd[i].padre.valor is not None:
                     xp, yp = coords[inOrd[i].padre.valor]
                     pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-
 
         for i in range(len(inOrd)):
             x, y = coords[inOrd[i].valor]
