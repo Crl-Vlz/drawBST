@@ -16,9 +16,15 @@ color["activeL"] = "#F5A0C1"
 def inicializar():
     i = input()
     f = open(i + ".in")
+    lines = f.readlines()
 
-    line = f.readline().split()
-    return line
+    instrucciones = list()
+
+    for line in lines:
+        line = line.rstrip("\n")
+        line = line.split()
+        instrucciones.append(line)
+    return instrucciones
     
 
 @dataclass #para no poner constructor --- es ponerle una etiqueta
@@ -198,18 +204,26 @@ def grid(width, height, w, h, pantalla):
         for column in range(width):
             color = "#FFFFFF"
             pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
-            print(column)
 
 
 def main():
     pygame.init()
-    nodos = inicializar()
+    instrucciones = inicializar()
     arb = bst()
     coords = dict()
+    for i in instrucciones:
+        if i[0] == "INSERTAR":
+            arb.insertar(int(i[1]), int(i[1]))
+            inOrd = arb.inorden(arb.raiz.izquierdo)
+        if i[0] == "BUSCAR":
+            pass
+        if i[0] == "ELIMINAR":
+            pass
+        if i[0] == "ROTAR":
+            pass
 
-    for nodo in nodos:
-        arb.insertar(int(nodo), int(nodo))
-    inOrd = arb.inorden(arb.raiz.izquierdo)
+
+
     altura = arb.altura()
     width = 2**altura + 1
     height = altura+1
