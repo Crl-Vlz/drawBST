@@ -259,7 +259,8 @@ def main():
                 if inOrd[i].padre.valor is not None:
                     xp, yp = coords[inOrd[i].padre.valor]
                     pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-    
+
+
         for i in range(len(inOrd)):
             x, y = coords[inOrd[i].valor]
             if inOrd[i].valor == nodo:
@@ -269,7 +270,7 @@ def main():
   
 
         pygame.display.update()
-        sleep(.1)	
+        sleep(.5)	
 
     while True:
         for event in pygame.event.get():
