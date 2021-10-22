@@ -205,6 +205,10 @@ def grid(width, height, w, h, pantalla):
             color = "#FFFFFF"
             pygame.draw.rect(pantalla, color, [(m + w) * column + m, (m + h) * row + m, w, h])
 
+def cambiarColor (Nodo, x, y, xp, yp, pantalla, w, h, artist) :
+    pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+    pygame.Surface.blit(pantalla, artist.draw(Nodo.valor, color["circle"], w/2, round(w/2)), (w*x, h*y))
+
 
 def main():
     pygame.init()
