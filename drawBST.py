@@ -333,19 +333,6 @@ def main():
         w = screenSize*2/width
         h = screenSize/height
 
-        #for i in range(len(inOrd)):
-        #    x, y = coords[inOrd[i].valor]
-        #    if inOrd[i].valor == nodo and inOrd[i].padre.valor is not None :
-        #        xp, yp = coords[inOrd[i].padre.valor]
-        #        pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-        #    else :  
-        #        if inOrd[i].padre.valor is not None:
-        #            xp, yp = coords[inOrd[i].padre.valor]
-        #            pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-
-        #pygame.display.update()
-        #sleep(.1)	
-
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
