@@ -14,6 +14,9 @@ color["line"] = "#9F8BF5"
 color["activeC"] = "#ADF67C"
 color["activeL"] = "#F5A0C1"
 
+coords = dict()
+
+
 def inicializar():
     i = input()
     f = open(i + ".in")
@@ -44,9 +47,11 @@ class Nodo:
 
 
 class bst:
-    def __init__(self): #Infinito para que cualquier valor se vaya a la izq al ser menor a inf
+    def __init__(self, pantalla, screenSize, artist): #Infinito para que cualquier valor se vaya a la izq al ser menor a inf
         self.raiz = Nodo(inf, None)
-
+        self.pantalla = pantalla
+        self.screenSize = screenSize
+        self.artist = artist
 
     def insertar(self, llave, valor=""):
         actual = self.raiz
@@ -95,7 +100,8 @@ class bst:
         while True:
             sleep(0.1)
             if llave == actual.llave:
-                return actual, navList
+                self.dibujarBuscarNodo(navList)
+                return actual
             if llave < actual.llave:
                 if not actual.izquierdo:
                         return None, []
@@ -139,7 +145,7 @@ class bst:
 
     def eliminar(self, Nodo):
         if type(Nodo) == int:
-            Nodo, uselessList = self.buscar(Nodo)
+            Nodo = self.buscar(Nodo)
         #Caso 1: Nodo sin hijos
         if not Nodo.izquierdo and not Nodo.derecho:
             padre = Nodo.padre
@@ -207,6 +213,96 @@ class bst:
             self.rotar(x)
             self.rotar(x)
 
+    def dibujarInsertarNodo(self):
+        inOrd = self.inorden(self.raiz.izquierdo)
+        for iter in range(len(inOrd)):
+            x,y = (iter, self.profundidad(inOrd[iter]))
+            coords[inOrd[iter].valor] = x, y
+        altura = self.altura()
+        width = 2**altura + 1
+        height = altura+1
+        w = self.screenSize*2/width
+        h = self.screenSize/height
+        for node in inOrd:
+            if node.visual:
+                x, y = coords[node.valor]
+                node.visual = pygame.transform.scale(node.visual, (w, w))
+                if node.line:
+                    xp, yp = coords[node.padre.valor]
+                    node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+                pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+            else:
+                node.visual = self.artist.draw(node.valor, color["activeC"], w/2, round(w/2))
+                x, y = coords[node.valor]
+                pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+                if node.padre and node.padre.valor:
+                    xp, yp = coords[node.padre.valor]
+                    node.line = pygame.draw.line(self.pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            node.visual.fill((255, 255, 255))
+            node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
+            if node.line:
+                node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+
+    def dibujarBuscarNodo(self, lista):
+        inOrd = self.inorden(self.raiz.izquierdo)
+        altura = self.altura()
+        width = 2**altura + 1
+        height = altura+1
+        w = self.screenSize*2/width
+        h = self.screenSize/height
+        for node in inOrd:
+            node.visual = pygame.transform.scale(node.visual, (w, w))
+            x, y = coords[node.valor]
+            pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+            node.visual.fill((255, 255, 255))
+            node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
+            if node.line:
+                xp, yp = coords[node.padre.valor]
+                node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+        for node in lista:
+            x, y = coords[node.valor]
+            node.visual = self.artist.draw(node.valor, color["activeC"], w/2, round(w/2))
+            if node.line:
+                xp, yp = coords[node.padre.valor]
+                node.line = pygame.draw.line(self.pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+            pygame.display.update()
+            sleep(1)
+        for node in lista:
+            node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
+            x, y = coords[node.valor]
+            if node.line:
+                xp, yp = coords[node.padre.valor]
+                node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+
+    def dibujarEliminarNodo(self):
+        inOrd = self.inorden(self.raiz.izquierdo)
+        altura = self.altura()
+        width = 2**altura + 1
+        height = altura+1
+        w = self.screenSize*2/width
+        h = self.screenSize/height
+        for iter in range(len(inOrd)):
+            x,y = (iter, self.profundidad(inOrd[iter]))
+            coords[inOrd[iter].valor] = x, y
+        altura = self.altura()
+        width = 2**altura + 1
+        height = altura+1
+        w = self.screenSize*2/width
+        h = self.screenSize/height
+        for node in inOrd:
+            if node.visual:
+                node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
+                x, y = coords[node.valor]
+                pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
+                if node.line:
+                    xp, yp = coords[node.padre.valor] 
+                    node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            self.pantalla.fill((255, 255, 255))
+            pygame.display.update()
+
+
 
 def grid(width, height, w, h, pantalla):
     m = 1
@@ -219,19 +315,13 @@ def grid(width, height, w, h, pantalla):
 def main():
     pygame.init()
     instrucciones = inicializar()
-    arb = bst()
-    coords = dict()
     screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
     artist = drawNode()
-    searchNodes = []
+    arb = bst(pantalla, screenSize, artist)
 
     w = 0
     h = 0
-
-
-
-    #pygame.display.update()
 
     for i in instrucciones:
         pantalla.fill((255,255,255))
@@ -239,90 +329,16 @@ def main():
         print(nodo)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
-            inOrd = arb.inorden(arb.raiz.izquierdo)
-            for iter in range(len(inOrd)):
-                x,y = (iter, arb.profundidad(inOrd[iter]))
-                coords[inOrd[iter].valor] = x, y
-            altura = arb.altura()
-            width = 2**altura + 1
-            height = altura+1
-            w = screenSize*2/width
-            h = screenSize/height
-            for node in inOrd:
-                if node.visual:
-                    x, y = coords[node.valor]
-                    node.visual = pygame.transform.scale(node.visual, (w, w))
-                    if node.line:
-                        xp, yp = coords[node.padre.valor]
-                        node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                else:
-                    node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
-                    x, y = coords[node.valor]
-                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                    if node.padre and node.padre.valor:
-                        xp, yp = coords[node.padre.valor]
-                        node.line = pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-                node.visual.fill((255, 255, 255))
-                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
-                if node.line:
-                    node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
+            arb.dibujarInsertarNodo()
             pygame.display.update()
             sleep(0.6)
 
         if i[0] == "BUSCAR":
-            encontrado, lista = arb.buscar(nodo)
-            inOrd = arb.inorden(arb.raiz.izquierdo)
-            for node in inOrd:
-                node.visual = pygame.transform.scale(node.visual, (w, w))
-                x, y = coords[node.valor]
-                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                node.visual.fill((255, 255, 255))
-                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
-                if node.line:
-                    xp, yp = coords[node.padre.valor]
-                    node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-            for node in lista:
-                x, y = coords[node.valor]
-                node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
-                if node.line:
-                    xp, yp = coords[node.padre.valor]
-                    node.line = pygame.draw.line(pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                pygame.display.update()
-                sleep(1)
-            for node in lista:
-                node.visual = artist.draw(node.valor, color["circle"], w/2, round(w/2))
-                x, y = coords[node.valor]
-                if node.line:
-                    xp, yp = coords[node.padre.valor]
-                    node.line = pygame.draw.line(pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
-                pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
+            encontrado = arb.buscar(nodo)
         if i[0] == "ELIMINAR":
             arb.eliminar(nodo)
-            inOrd = arb.inorden(arb.raiz.izquierdo)
-            for iter in range(len(inOrd)):
-                x,y = (iter, arb.profundidad(inOrd[iter]))
-                coords[inOrd[iter].valor] = x, y
-            altura = arb.altura()
-            width = 2**altura + 1
-            height = altura+1
-            w = screenSize*2/width
-            h = screenSize/height
-            for node in inOrd:
-                if node.visual:
-                    #Add this
-                    node.visual = pygame.transform.scale(node.visual, (w, w))
-                    x, y = coords[node.valor]
-                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                    #pantalla.blit(node.visual, (w*x, h*y))
-                else:
-                    node.visual = artist.draw(node.valor, color["activeC"], w/2, round(w/2))
-                    x, y = coords[node.valor]
-                    pygame.Surface.blit(pantalla, node.visual, (w*x, h*y))
-                    #pantalla.blit(node.visual, (w*x, h*y))
-                sleep(0.1)
-                node.visual.fill(color["circle"])
+            arb.dibujarEliminarNodo()
+            
         if i[0] == "ROTAR":
             pass
             #arb.doble_rotar(nodo)
