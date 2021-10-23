@@ -104,12 +104,12 @@ class bst:
                 return actual
             if llave < actual.llave:
                 if not actual.izquierdo:
-                        return None, []
+                        return None
                 actual = actual.izquierdo
                 navList.append(actual)
             else:
                 if not actual.derecho:
-                        return None, []
+                        return None
                 actual = actual.derecho
                 navList.append(actual)
 
@@ -193,25 +193,50 @@ class bst:
         if hijo is not None :
             hijo.padre = padre
 
-    def rotar(self, x) :
-        y = x.padre #padre de x
-        z = y.padre #abuelo de x
-        self.religar(z,x,y==z.izquierdo)
-        if x==y.izquierdo :
-            self.religar(y,x.derecho,True)
-            self.religar(x,y,False)
-        if x==y.derecho :
-            self.religar(y,x.izquierdo,False)
-            self.religar(x,y,True)
+    def rotar(self, Nodo) :
+        NodoY = Nodo.padre #padre de x
+        NodoZ = NodoY.padre #abuelo de x
+        self.religar(NodoZ, Nodo,NodoY==NodoZ.izquierdo)
+        if Nodo==NodoY.izquierdo :
+            self.religar(NodoY,Nodo.derecho,True)
+            self.religar(Nodo,NodoY,False)
+        if Nodo==NodoY.derecho :
+            self.religar(NodoY,Nodo.izquierdo,False)
+            self.religar(Nodo,NodoY,True)
+
+    #def rotar(self, x) :
+    #    y = x.padre #padre de x
+    #    z = y.padre #abuelo de x
+    #    self.religar(z,x,y==z.izquierdo)
+    #    if x==y.izquierdo :
+    #        self.religar(y,x.derecho,True)
+    #        self.religar(x,y,False)
+    #    if x==y.derecho :
+    #        self.religar(y,x.izquierdo,False)
+    #        self.religar(x,y,True)
     
-    def doble_rotar(self,x) :
-        y = x.padre
-        z = y.padre
-        if (x==y.derecho) == (y==z.derecho) :
-            self.rotar(y)
+    def doble_rotar(self,Nodo) :
+
+        Nodo = self.buscar(Nodo)
+
+        NodoY = Nodo.padre
+        NodoZ = NodoY.padre
+        if (Nodo==NodoY.derecho) == (NodoY==NodoZ.derecho) :
+            self.rotar(NodoY)
         else :
-            self.rotar(x)
-            self.rotar(x)
+            self.rotar(Nodo)
+            self.rotar(Nodo)
+        self.pantalla.fill((255, 255, 255))
+        self.dibujarInsertarNodo()
+
+    #def doble_rotar(self,x) :
+    #    y = x.padre
+    #    z = y.padre
+    #    if (x==y.derecho) == (y==z.derecho) :
+    #        self.rotar(y)
+    #    else :
+    #        self.rotar(x)
+    #        self.rotar(x)
 
     def dibujarInsertarNodo(self):
         inOrd = self.inorden(self.raiz.izquierdo)
@@ -340,8 +365,7 @@ def main():
             arb.dibujarEliminarNodo()
             
         if i[0] == "ROTAR":
-            pass
-            #arb.doble_rotar(nodo)
+            arb.doble_rotar(nodo)
 
         altura = arb.altura()
         width = 2**altura + 1
