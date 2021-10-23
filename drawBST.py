@@ -251,7 +251,7 @@ class bst:
         for node in inOrd:
             if node.visual:
                 x, y = coords[node.valor]
-                node.visual = pygame.transform.scale(node.visual, (w, w))
+                node.visual = pygame.transform.scale(node.visual, (round(w), round(w)))
                 if node.line:
                     xp, yp = coords[node.padre.valor]
                     node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
@@ -276,7 +276,7 @@ class bst:
         w = self.screenSize*2/width
         h = self.screenSize/height
         for node in inOrd:
-            node.visual = pygame.transform.scale(node.visual, (w, w))
+            node.visual = pygame.transform.scale(node.visual, (round(w), round(w)))
             x, y = coords[node.valor]
             pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
             node.visual.fill((255, 255, 255))
