@@ -46,30 +46,34 @@ class Nodo:
     line: pygame.Rect = None
 
 
+
 class bst:
     def __init__(self, pantalla, screenSize, artist): #Infinito para que cualquier valor se vaya a la izq al ser menor a inf
         self.raiz = Nodo(inf, None)
         self.pantalla = pantalla
         self.screenSize = screenSize
         self.artist = artist
+       
+    def __repr__(self):
+        return f"Nodo {self.raiz}"
 
     def insertar(self, llave, valor=""):
-        actual = self.raiz
+        actual= self.raiz
         while True:
-            #Insertando los Nodos            CONDICIONES DE PARO
-            if llave < actual.llave and not actual.izquierdo:
-                actual.izquierdo=Nodo(llave, valor)
-                actual.izquierdo.padre = actual
+            ## Condiciones de paro
+            if llave< actual.llave and not actual.izquierdo:
+                actual.izquierdo= Nodo(llave, valor)
+                actual.izquierdo.padre= actual
                 break
             if llave>= actual.llave and not actual.derecho:
-                actual.derecho = Nodo(llave, valor)
-                actual.derecho.padre = actual
+                actual.derecho= Nodo(llave, valor)
+                actual.derecho.padre= actual
                 break
-            #Recorriendo derecho o izq             ITERACIÓN
-            if llave < actual.llave:
-                actual = actual.izquierdo
-            else:
-                actual = actual.derecho
+            ## Condiciones de iteración
+            if llave< actual.llave:
+                actual= actual.izquierdo
+            else: 
+                actual= actual.derecho
 
     def profundidad(self, nodo):
         conteo = 0
@@ -167,8 +171,9 @@ class bst:
         #Caso 3: Nodo con hijos
         else:
             anterior = self.anterior(Nodo)
-            self.intercambiar(anterior, Nodo)
-            self.eliminar(anterior)
+            if anterior is not None:
+                self.intercambiar(anterior, Nodo)
+                self.eliminar(anterior)
 
 
     def preorden(self, Nodo):
@@ -351,7 +356,7 @@ def main():
     for i in instrucciones:
         pantalla.fill((255,255,255))
         nodo = int(i[1])
-        print(nodo)
+        print(arb)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
             arb.dibujarInsertarNodo()
@@ -363,6 +368,7 @@ def main():
         if i[0] == "ELIMINAR":
             arb.eliminar(nodo)
             arb.dibujarEliminarNodo()
+
             
         if i[0] == "ROTAR":
             arb.doble_rotar(nodo)
@@ -373,11 +379,13 @@ def main():
         w = screenSize*2/width
         h = screenSize/height
 
+
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
             pygame.display.update()	
 
+#NO SE ACTUALIZA EL PADRE AL MODIFICAR NODOS
 
 main()
