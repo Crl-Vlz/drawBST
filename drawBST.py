@@ -358,19 +358,23 @@ def main():
         nodo = int(i[1])
         print(arb)
         if i[0] == "INSERTAR":
+            pygame.display.set_caption('INSERTANDO '+ str(nodo))
             arb.insertar(nodo, nodo)
             arb.dibujarInsertarNodo()
             pygame.display.update()
             sleep(0.6)
 
         if i[0] == "BUSCAR":
+            pygame.display.set_caption('BUSCANDO '+ str(nodo))
             encontrado = arb.buscar(nodo)
         if i[0] == "ELIMINAR":
+            pygame.display.set_caption('ELIMINANDO '+ str(nodo))
             arb.eliminar(nodo)
             arb.dibujarEliminarNodo()
 
             
         if i[0] == "ROTAR":
+            pygame.display.set_caption('ROTANDO '+ str(nodo))
             arb.doble_rotar(nodo)
 
         altura = arb.altura()
