@@ -45,6 +45,9 @@ class Nodo:
     visual: pygame.Surface = None
     line: pygame.Rect = None
 
+    def __repr__(self):
+        return "Nodo: " + str(self.valor)
+
 
 
 class bst:
@@ -157,6 +160,8 @@ class bst:
                 padre.izquierdo = None
             else:
                 padre.derecho = None
+            Nodo.visual = None
+            Nodo.line = None
         #Caso 2: Nodo con 1 hijo
         elif not Nodo.izquierdo or not Nodo.derecho:
             if Nodo.izquierdo:
@@ -168,6 +173,7 @@ class bst:
                 padre.izquierdo = hijo
             else:
                 padre.derecho = hijo
+            hijo.padre = padre
         #Caso 3: Nodo con hijos
         else:
             anterior = self.anterior(Nodo)
@@ -208,17 +214,6 @@ class bst:
         if Nodo==NodoY.derecho :
             self.religar(NodoY,Nodo.izquierdo,False)
             self.religar(Nodo,NodoY,True)
-
-    #def rotar(self, x) :
-    #    y = x.padre #padre de x
-    #    z = y.padre #abuelo de x
-    #    self.religar(z,x,y==z.izquierdo)
-    #    if x==y.izquierdo :
-    #        self.religar(y,x.derecho,True)
-    #        self.religar(x,y,False)
-    #    if x==y.derecho :
-    #        self.religar(y,x.izquierdo,False)
-    #        self.religar(x,y,True)
     
     def doble_rotar(self,Nodo) :
 
@@ -233,15 +228,6 @@ class bst:
             self.rotar(Nodo)
         self.pantalla.fill((255, 255, 255))
         self.dibujarInsertarNodo()
-
-    #def doble_rotar(self,x) :
-    #    y = x.padre
-    #    z = y.padre
-    #    if (x==y.derecho) == (y==z.derecho) :
-    #        self.rotar(y)
-    #    else :
-    #        self.rotar(x)
-    #        self.rotar(x)
 
     def dibujarInsertarNodo(self):
         inOrd = self.inorden(self.raiz.izquierdo)
@@ -356,7 +342,6 @@ def main():
     for i in instrucciones:
         pantalla.fill((255,255,255))
         nodo = int(i[1])
-        print(arb)
         if i[0] == "INSERTAR":
             arb.insertar(nodo, nodo)
             arb.dibujarInsertarNodo()
@@ -372,6 +357,9 @@ def main():
             
         if i[0] == "ROTAR":
             arb.doble_rotar(nodo)
+            arb.dibujarInsertarNodo()
+            pygame.display.update()
+            sleep(0.6)
 
         altura = arb.altura()
         width = 2**altura + 1
