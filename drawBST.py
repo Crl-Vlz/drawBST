@@ -42,8 +42,15 @@ class Nodo:
     padre: Nodo = None
     izquierdo: Nodo = None
     derecho: Nodo = None
+    altura: int = 0
     visual: pygame.Surface = None
     line: pygame.Rect = None
+
+    def alturaIzquierda(self):
+        return self.izquierdo.altura if self.izquierdo else 0
+
+    def alturaDerecha(self):
+        return self.derecho.altura if self.derecho else 0
 
     def __repr__(self):
         return "Nodo: " + str(self.valor)
@@ -60,16 +67,42 @@ class bst:
     def __repr__(self):
         return f"Nodo {self.raiz}"
 
-    def insertar(self, llave, valor=""):
+    def recalcular_altura(self, p: Nodo) -> None:
+        p.altura = max(p.alturaIzquierda(), p.alturaDerecha()) + 1
+
+    def estaBalanceado(self, p: Nodo) -> bool:
+        return abs(p.alturaIzquierda() - p.alturaDerecha()) <= 1
+
+    def hijoAlto(self, p: Nodo) -> Nodo:
+        if p.alturaIzquierda() > p.alturaDerecha(): return p.izquierdo
+        else: return p.derecho
+
+    def nietoAlto(self, p: Nodo) -> Nodo:
+        hijo = self.hijoAlto(p)
+        return self.hijoAlto(hijo)
+
+    def rebalancear(self, p: Nodo) -> None:
+        while p!= self.raiz:
+            alturaAnterior = p.altura
+            if not self.estaBalanceado(p):
+                p = self.doble_rotar(self.nietoAlto(p))
+                if p.izquierdo: self.recalcular_altura(p.izquierdo)
+                if p.derecho: self.recalcular_altura(p.derecho)
+            self.recalcular_altura(p)
+            if p.altura == alturaAnterior: p = self.raiz
+            else: p = p.padre
+
+    def insertar(self, llave, valor="") -> Nodo:
         actual= self.raiz
         while True:
             ## Condiciones de paro
             if llave< actual.llave and not actual.izquierdo:
                 actual.izquierdo= Nodo(llave, valor)
                 actual.izquierdo.padre= actual
+                print(actual.izquierdo, end="--- Nodo Padre: ")
                 break
             if llave>= actual.llave and not actual.derecho:
-                actual.derecho= Nodo(llave, valor)
+                actual.derecho = Nodo(llave, valor)
                 actual.derecho.padre= actual
                 break
             ## Condiciones de iteración
@@ -77,6 +110,8 @@ class bst:
                 actual= actual.izquierdo
             else: 
                 actual= actual.derecho
+        print(actual)
+        return actual
 
     def profundidad(self, nodo):
         conteo = 0
@@ -101,7 +136,7 @@ class bst:
         else:
             return cont2
 
-    def buscar(self, llave):
+    def buscar(self, llave: int):
         actual = self.raiz
         navList = []
         while True:
@@ -150,12 +185,14 @@ class bst:
         Nodo1.valor, Nodo2.valor = Nodo2.valor, Nodo1.valor
     
 
-    def eliminar(self, Nodo):
+    def eliminar(self, Nodo) -> Nodo:
         if type(Nodo) == int:
             Nodo = self.buscar(Nodo)
+
+        padre = Nodo.padre
+
         #Caso 1: Nodo sin hijos
         if not Nodo.izquierdo and not Nodo.derecho:
-            padre = Nodo.padre
             if padre.izquierdo==Nodo:
                 padre.izquierdo = None
             else:
@@ -168,7 +205,6 @@ class bst:
                 hijo = Nodo.izquierdo
             else:
                 hijo = Nodo.derecho
-            padre = Nodo.padre
             if padre.izquierdo == Nodo:
                 padre.izquierdo = hijo
             else:
@@ -181,6 +217,7 @@ class bst:
                 self.intercambiar(anterior, Nodo)
                 self.eliminar(anterior)
 
+        return padre
 
     def preorden(self, Nodo):
         if not Nodo: return []
@@ -217,17 +254,17 @@ class bst:
     
     def doble_rotar(self,Nodo) :
 
-        Nodo = self.buscar(Nodo)
+        if type(Nodo) == int:
+            Nodo = self.buscar(Nodo)
 
         NodoY = Nodo.padre
         NodoZ = NodoY.padre
-        if (Nodo==NodoY.derecho) == (NodoY==NodoZ.derecho) :
+        if (Nodo==NodoY.derecho) == (NodoY==NodoZ.derecho):
             self.rotar(NodoY)
         else :
             self.rotar(Nodo)
             self.rotar(Nodo)
-        self.pantalla.fill((255, 255, 255))
-        self.dibujarInsertarNodo()
+        return Nodo
 
     def dibujarInsertarNodo(self):
         inOrd = self.inorden(self.raiz.izquierdo)
@@ -244,7 +281,9 @@ class bst:
                 x, y = coords[node.valor]
                 node.visual = pygame.transform.scale(node.visual, (round(w), round(w)))
                 if node.line:
-                    xp, yp = coords[node.padre.valor]
+                    xp, yp = 0, 0
+                    if node.padre.valor in coords:
+                        xp, yp = coords[node.padre.valor]
                     node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
                 pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
             else:
@@ -273,13 +312,17 @@ class bst:
             node.visual.fill((255, 255, 255))
             node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
             if node.line:
-                xp, yp = coords[node.padre.valor]
+                xp, yp = 0, 0
+                if node.padre.valor in coords:
+                    xp, yp = coords[node.padre.valor]
                 node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
         for node in lista:
             x, y = coords[node.valor]
             node.visual = self.artist.draw(node.valor, color["activeC"], w/2, round(w/2))
             if node.line:
-                xp, yp = coords[node.padre.valor]
+                xp, yp = 0, 0
+                if node.padre.valor in coords:
+                    xp, yp = coords[node.padre.valor]
                 node.line = pygame.draw.line(self.pantalla, color["activeL"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
             pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
             pygame.display.update()
@@ -288,7 +331,9 @@ class bst:
             node.visual = self.artist.draw(node.valor, color["circle"], w/2, round(w/2))
             x, y = coords[node.valor]
             if node.line:
-                xp, yp = coords[node.padre.valor]
+                xp, yp = 0, 0
+                if node.padre.valor in coords:
+                    xp, yp = coords[node.padre.valor]
                 node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
             pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
 
@@ -313,11 +358,23 @@ class bst:
                 x, y = coords[node.valor]
                 pygame.Surface.blit(self.pantalla, node.visual, (w*x, h*y))
                 if node.line:
-                    xp, yp = coords[node.padre.valor] 
+                    xp, yp = 0, 0
+                    if node.padre.valor in coords:
+                        xp, yp = coords[node.padre.valor]
                     node.line = pygame.draw.line(self.pantalla, color["line"], (w*x+w*.5, h*y), (w*xp+w*.5, h*yp), 2)
             self.pantalla.fill((255, 255, 255))
             pygame.display.update()
 
+class AVL(bst):
+
+    def insertar(self, llave: int, valor: str ="") -> None:
+        p = super().insertar(llave, valor)
+        self.rebalancear(p)
+
+    def eliminar(self, Nodo: Nodo) -> None:
+        p =  super().eliminar(Nodo)
+        self.rebalancear(p)
+    
 
 
 def grid(width, height, w, h, pantalla):
@@ -334,7 +391,7 @@ def main():
     screenSize = 500
     pantalla = pygame.display.set_mode((screenSize*2, screenSize))
     artist = drawNode()
-    arb = bst(pantalla, screenSize, artist)
+    arb = AVL(pantalla, screenSize, artist)
 
     w = 0
     h = 0
@@ -351,7 +408,7 @@ def main():
 
         if i[0] == "BUSCAR":
             pygame.display.set_caption('BUSCANDO '+ str(nodo))
-            encontrado = arb.buscar(nodo)
+            arb.buscar(nodo)
         if i[0] == "ELIMINAR":
             pygame.display.set_caption('ELIMINANDO '+ str(nodo))
             arb.eliminar(nodo)
@@ -361,6 +418,7 @@ def main():
         if i[0] == "ROTAR":
             pygame.display.set_caption('ROTANDO '+ str(nodo))
             arb.doble_rotar(nodo)
+            pantalla.fill((255, 255, 255))
             arb.dibujarInsertarNodo()
             pygame.display.update()
             sleep(0.6)
