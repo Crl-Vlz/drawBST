@@ -82,6 +82,10 @@ class bst:
         return self.hijoAlto(hijo)
 
     def rebalancear(self, p: Nodo) -> None:
+
+        if type(p) == int:
+            p = self.buscar(p)
+
         while p!= self.raiz:
             alturaAnterior = p.altura
             if not self.estaBalanceado(p):
@@ -417,7 +421,7 @@ def main():
             
         if i[0] == "ROTAR":
             pygame.display.set_caption('ROTANDO '+ str(nodo))
-            arb.doble_rotar(nodo)
+            arb.rebalancear(nodo)
             pantalla.fill((255, 255, 255))
             arb.dibujarInsertarNodo()
             pygame.display.update()
